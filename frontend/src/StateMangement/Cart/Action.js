@@ -1,4 +1,4 @@
-import { API_URL, Api } from "../../components/Api/Api";
+import { Api } from "../../components/Api/Api";
 import {
 	ADD_ITEM_TO_CART_FAILURE,
 	ADD_ITEM_TO_CART_REQUEST,
@@ -19,6 +19,7 @@ import {
 	UPDATE_CARTITEM_REQUEST,
 	UPDATE_CARTITEM_SUCCESS,
 } from "./ActionType";
+import Cookies from "js-cookie";
 
 export const findCart = (token) => {
 	return async (dispatch) => {
@@ -120,7 +121,7 @@ export const clearCartAction = () => {
 				{},
 				{
 					headers: {
-						Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+						Authorization: `Bearer ${Cookies.get("jwt")}`,
 					},
 				},
 			);

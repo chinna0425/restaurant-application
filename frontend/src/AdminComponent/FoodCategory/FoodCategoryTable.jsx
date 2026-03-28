@@ -8,11 +8,9 @@ import TableRow from "@mui/material/TableRow";
 import CreateIcon from "@mui/icons-material/Create";
 import Paper from "@mui/material/Paper";
 import CreateFoodCategoryForm from "./CreateFoodCategoryForm";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurantsCategory } from "../../StateMangement/Restaurant/Action";
-import { fetchRestaurantsOrder } from "../../StateMangement/RestaurantOrder/Action";
-
+import Cookies from "js-cookie";
 const orders = [1, 2, 3, 4, 5, 6];
 const style = {
 	position: "absolute",
@@ -29,9 +27,7 @@ const FoodCategoryTable = () => {
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
-	const dispatch = useDispatch();
 	const { restaurant } = useSelector((store) => store);
-	const jwt = localStorage.getItem("jwt");
 
 	return (
 		<Box>

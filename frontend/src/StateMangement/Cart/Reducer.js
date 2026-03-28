@@ -13,6 +13,7 @@ import {
 	UPDATE_CARTITEM_REQUEST,
 	UPDATE_CARTITEM_SUCCESS,
 } from "./ActionType";
+import Cookies from "js-cookie";
 
 const initialState = {
 	cart: null,
@@ -70,7 +71,7 @@ const cartReducer = (state = initialState, action) => {
 				error: action.payload,
 			};
 		case LOGOUT:
-			localStorage.removeItem("jwt");
+			Cookies.remove("jwt");
 			return {
 				...state,
 				cartItems: [],

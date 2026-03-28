@@ -2,15 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import HomeIcon from "@mui/icons-material/Home";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import EventIcon from "@mui/icons-material/Event";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { AddReaction, Home } from "@mui/icons-material";
 import { Divider, Drawer, useMediaQuery } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { logOut } from "../../StateMangement/Authentication/Action";
+import { Home } from "@mui/icons-material";
 
 const menu = [
 	{ id: 1, title: "Orders", icon: <ShoppingBagIcon /> },

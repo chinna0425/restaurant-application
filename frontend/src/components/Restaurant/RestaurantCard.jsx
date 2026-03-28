@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToFavorite } from "../../StateMangement/Authentication/Action";
 import { isPresentInFavorites } from "../config/logic";
+import Cookies from "js-cookie";
+
 const RestaurantCard = ({ item }) => {
 	// console.log("Each restaurant", item);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const auth = useSelector((store) => store.auth);
 
 	const handleAddToFavorite = () => {

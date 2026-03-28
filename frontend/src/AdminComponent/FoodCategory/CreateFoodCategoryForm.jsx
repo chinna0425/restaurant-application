@@ -2,11 +2,9 @@ import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createCategoryAction } from "../../StateMangement/Restaurant/Action";
-
+import Cookies from "js-cookie";
 const CreateFoodCategoryForm = ({ onClose }) => {
 	const dispatch = useDispatch();
-	const { restaurant } = useSelector((store) => store);
-
 	const [formData, setFormData] = useState({
 		categoryName: "",
 		restaurantId: "",
@@ -20,11 +18,7 @@ const CreateFoodCategoryForm = ({ onClose }) => {
 				id: formData.restaurantId,
 			},
 		};
-		console.log("--------", data);
-		dispatch(
-			createCategoryAction({ reqData: data, jwt: localStorage.getItem("jwt") }),
-		);
-		console.log("category", data);
+		dispatch(createCategoryAction({ reqData: data, jwt: Cookies.get("jwt") }));
 		onClose();
 	};
 

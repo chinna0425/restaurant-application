@@ -1,11 +1,4 @@
-import {
-	Box,
-	Card,
-	CardActions,
-	CardHeader,
-	IconButton,
-	Modal,
-} from "@mui/material";
+import { Box, Card, CardHeader, IconButton, Modal } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -18,8 +11,7 @@ import { useEffect, useState } from "react";
 import CreateIngredientCategoryForm from "./CreateIngredientCategoryForm";
 import { useDispatch, useSelector } from "react-redux";
 import { getIngredientCategory } from "../../StateMangement/Ingredients/Action";
-
-const orders = [1, 2, 3, 4, 5, 6];
+import Cookies from "js-cookie";
 
 const style = {
 	position: "absolute",
@@ -38,7 +30,7 @@ const IngredientCategoryTable = () => {
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const { restaurant, ingredients } = useSelector((store) => store);
 	useEffect(() => {
 		dispatch(

@@ -2,10 +2,11 @@ import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createIngredientCategory } from "../../StateMangement/Ingredients/Action";
+import Cookies from "js-cookie";
 
 const CreateIngredientCategoryForm = () => {
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const { restaurant } = useSelector((store) => store);
 	const [formData, setFormData] = useState({
 		name: "",

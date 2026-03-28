@@ -7,10 +7,10 @@ import { getUser } from "./StateMangement/Authentication/Action.js";
 import { findCart } from "./StateMangement/Cart/Action.js";
 import Routers from "./Routers/Routers.jsx";
 import { getRestaurantByUserId } from "./StateMangement/Restaurant/Action.js";
-
+import Cookies from "js-cookie";
 function App() {
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const auth = useSelector((store) => store.auth);
 	useEffect(() => {
 		dispatch(getUser(auth.token || jwt));
@@ -18,7 +18,9 @@ function App() {
 	}, [auth.token, jwt]);
 
 	useEffect(() => {
-		dispatch(getRestaurantByUserId(auth.jwt || jwt));
+		if (auth.user?.role === "ROLE_RESTAURANT_OWNER" && (auth.jwt || jwt)) {
+			dispatch(getRestaurantByUserId(auth.jwt || jwt));
+		}
 	}, [auth.user]);
 
 	return (

@@ -49,7 +49,6 @@ export const loginUser = (reqData) => async (dispatch) => {
 		);
 		// console.log(data);
 		if (data.token) {
-			localStorage.setItem("jwt", data.token);
 			const expirationTime = 86400000; // 24 hours in ms
 
 			const expiryDate = new Date(new Date().getTime() + expirationTime);
@@ -123,7 +122,7 @@ export const addToFavorite =
 
 export const logOut = () => async (dispatch) => {
 	try {
-		localStorage.clear();
+		Cookies.remove("jwt");
 		dispatch({ type: LOGOUT });
 		console.log("logOut success");
 	} catch (error) {

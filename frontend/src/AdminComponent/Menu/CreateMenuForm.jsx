@@ -20,6 +20,7 @@ import { uploadImageToCloudinary } from "../util/UploadToCloudinary";
 import { useDispatch, useSelector } from "react-redux";
 import { createMenuItem } from "../../StateMangement/Menu/Action";
 import { getIngredientsOfRestaurant } from "../../StateMangement/Ingredients/Action";
+import Cookies from "js-cookie";
 
 const initialValues = {
 	name: "",
@@ -35,18 +36,10 @@ const initialValues = {
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-	PaperProps: {
-		style: {
-			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
-		},
-	},
-};
 
 const CreateMenuForm = () => {
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const restaurant = useSelector((store) => store.restaurant);
 	const ingredients = useSelector((store) => store.ingredients);
 	const formik = useFormik({

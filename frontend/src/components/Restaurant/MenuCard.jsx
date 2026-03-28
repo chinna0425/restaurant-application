@@ -12,21 +12,8 @@ import categorizeIngredients from "../util/categorizeIngredients";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../../StateMangement/Cart/Action";
-const ingredients = [
-	{
-		category: "Nuts & Seeds",
-		items: ["Almonds", "Cashews", "Pistachios", "Walnuts"],
-	},
-	{ category: "Proteins", items: ["Chicken", "Beef", "Tofu", "Lentils"] },
-	{
-		category: "bread",
-		items: ["Naan", "Roti", "Paratha"],
-	},
-	{
-		category: "Vegetables",
-		items: ["Onions", "Tomatoes", "Spinach", "Peppers"],
-	},
-];
+import Cookies from "js-cookie";
+
 const MenuCard = ({ item }) => {
 	const [selectedIngredients, setSelectedIngredients] = useState([]);
 	const dispatch = useDispatch();
@@ -43,7 +30,7 @@ const MenuCard = ({ item }) => {
 
 	const handleAddItemToCart = (event) => {
 		event.preventDefault();
-		const jwt = localStorage.getItem("jwt");
+		const jwt = Cookies.get("jwt");
 		const reqData = {
 			jwt: jwt,
 			cartItem: {

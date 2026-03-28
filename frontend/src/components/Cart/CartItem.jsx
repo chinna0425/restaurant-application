@@ -7,13 +7,14 @@ import {
 	removeCartItem,
 	updateCartItem,
 } from "../../StateMangement/Cart/Action";
+import Cookies from "js-cookie";
 
 const CartItem = ({ item }) => {
 	const navigate = useNavigate();
-	const { auth, cart } = useSelector((state) => state);
+	const auth = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 
 	const handleUpdateCartItem = (value) => {
 		if (value === -1 && item.quantity === 1) {

@@ -2,7 +2,6 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { Button, Card } from "@mui/material";
 import { green } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
-import Cart from "../Cart/Cart";
 
 const PaymentSuccess = () => {
 	const navigate = useNavigate();

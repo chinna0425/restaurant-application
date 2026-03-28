@@ -10,15 +10,18 @@ import {
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createIngredient } from "../../StateMangement/Ingredients/Action";
+import Cookies from "js-cookie";
+import { store } from "../../StateMangement/store";
 
 const CreateIngredientForm = () => {
 	const dispatch = useDispatch();
-	const { restaurant, ingredients } = useSelector((store) => store);
+	const restaurant = useSelector((store) => store.restaurant);
+	const ingredients = useSelector((store) => store.ingredients);
 	const [formData, setFormData] = useState({
 		name: "",
 		categoryId: "",
 	});
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const data = {

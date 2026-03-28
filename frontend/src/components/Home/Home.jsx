@@ -4,16 +4,15 @@ import "./Home.css";
 import MultiItemCarousal from "./MultiItemCarousal";
 import { useEffect } from "react";
 import { getAllRestaurantsAction } from "../../StateMangement/Restaurant/Action";
+import Cookies from "js-cookie";
 
 const Home = () => {
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 
 	useEffect(() => {
-		if (jwt) {
-			dispatch(getAllRestaurantsAction(jwt));
-		}
-	}, [jwt]);
+		dispatch(getAllRestaurantsAction(jwt));
+	}, []);
 
 	const restaurant = useSelector((store) => store.restaurant);
 	// console.log("Home restaurant", restaurant);

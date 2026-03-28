@@ -9,7 +9,7 @@ import { Button, TextField } from "@mui/material";
 import { uploadImageToCloudinary } from "../util/UploadToCloudinary";
 import { useDispatch } from "react-redux";
 import { createRestaurant } from "../../StateMangement/Restaurant/Action";
-
+import Cookies from "js-cookie";
 const initialValues = {
 	name: "",
 	description: "",
@@ -29,7 +29,7 @@ const initialValues = {
 
 const CreateRestaurantForm = () => {
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const formik = useFormik({
 		initialValues,
 		onSubmit: (values) => {

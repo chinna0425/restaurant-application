@@ -19,6 +19,7 @@ import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 import {
 	deleteFoodAction,
 	getMenuItemsByRestaurantId,
@@ -27,9 +28,8 @@ import {
 const MenuTable = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const restaurant = useSelector((store) => store.restaurant);
-	const ingredients = useSelector((store) => store.ingredients);
 	const menu = useSelector((store) => store.menu);
 
 	useEffect(() => {

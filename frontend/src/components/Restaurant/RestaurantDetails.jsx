@@ -18,7 +18,7 @@ import {
 	getRestaurantsCategory,
 } from "../../StateMangement/Restaurant/Action";
 import { getMenuItemsByRestaurantId } from "../../StateMangement/Menu/Action";
-
+import Cookies from "js-cookie";
 const foodItemType = [
 	{
 		label: "All",
@@ -40,9 +40,9 @@ const foodItemType = [
 
 const RestaurantDetails = () => {
 	const [foodType, setFoodType] = useState("all");
-	const navigate = useNavigate();
+
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const restaurant = useSelector((store) => store.restaurant);
 	const menu = useSelector((store) => store.menu);
 

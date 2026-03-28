@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import XIcon from "@mui/icons-material/X";
 import { useDispatch, useSelector } from "react-redux";
 import { updateRestaurantStatus } from "../../StateMangement/Restaurant/Action";
+import Cookies from "js-cookie";
 const RestaurantDetails = () => {
 	const dispatch = useDispatch();
 
@@ -14,12 +15,12 @@ const RestaurantDetails = () => {
 		dispatch(
 			updateRestaurantStatus({
 				restaurantId: restaurant.usersRestaurant?.id,
-				jwt: localStorage.getItem("jwt"),
+				jwt: Cookies.get("jwt"),
 			}),
 		);
 	};
 
-	const { restaurant } = useSelector((store) => store);
+	const restaurant = useSelector((store) => store.restaurant);
 
 	return (
 		<div className="lg:px-20 px-5 pb-3">

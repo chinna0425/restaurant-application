@@ -2,7 +2,6 @@ import {
 	Box,
 	Button,
 	Card,
-	CardActions,
 	CardHeader,
 	IconButton,
 	Modal,
@@ -22,8 +21,8 @@ import {
 	getIngredientsOfRestaurant,
 	updateStockOfIngredient,
 } from "../../StateMangement/Ingredients/Action";
+import Cookies from "js-cookie";
 
-const orders = [1, 2, 3, 4, 5, 6];
 const style = {
 	position: "absolute",
 	top: "50%",
@@ -42,7 +41,7 @@ const IngredientTable = () => {
 	const handleClose = () => setOpen(false);
 
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const { restaurant, ingredients } = useSelector((store) => store);
 
 	useEffect(() => {

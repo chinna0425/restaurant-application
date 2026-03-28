@@ -4,7 +4,7 @@ import Admin from "../AdminComponent/Admin/Admin";
 import { useSelector } from "react-redux";
 
 const AdminRoutes = () => {
-	const { restaurant } = useSelector((store) => store);
+	const restaurant = useSelector((store) => store.restaurant);
 
 	return (
 		<div>

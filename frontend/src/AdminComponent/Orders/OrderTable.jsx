@@ -9,6 +9,7 @@ import {
 	Menu,
 	MenuItem,
 } from "@mui/material";
+import Cookies from "js-cookie";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -48,7 +49,7 @@ const orderStatus = [
 
 const OrderTable = () => {
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const restaurant = useSelector((store) => store.restaurant);
 	const restaurantOrder = useSelector((store) => store.restaurantOrder);
 	const handleUpdateOrder = (orderId, orderStatus) => {

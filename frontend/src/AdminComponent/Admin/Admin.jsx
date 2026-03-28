@@ -10,17 +10,13 @@ import AdminDashboard from "../AdminDashboard/AdminDashboard";
 import CreateMenuForm from "../Menu/CreateMenuForm";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import {
-	getRestaurantById,
-	getRestaurantsCategory,
-} from "../../StateMangement/Restaurant/Action";
-import { getMenuItemsByRestaurantId } from "../../StateMangement/Menu/Action";
+import { getRestaurantsCategory } from "../../StateMangement/Restaurant/Action";
 import { fetchRestaurantsOrder } from "../../StateMangement/RestaurantOrder/Action";
-
+import Cookies from "js-cookie";
 const Admin = () => {
 	const dispatch = useDispatch();
-	const { restaurant } = useSelector((store) => store);
-	const jwt = localStorage.getItem("jwt");
+	const restaurant = useSelector((store) => store.restaurant);
+	const jwt = Cookies.get("jwt");
 	const handleClose = () => {};
 
 	useEffect(() => {

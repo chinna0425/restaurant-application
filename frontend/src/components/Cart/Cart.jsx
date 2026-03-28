@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../../StateMangement/Order/Action";
+import Cookies from "js-cookie";
 
 const style = {
 	position: "absolute",
@@ -55,12 +56,14 @@ const Cart = () => {
 	const [open, setOpen] = React.useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
-	const { cart, auth } = useSelector((store) => store);
+	const cart = useSelector((store) => store.cart);
+	const auth = useSelector((store) => store.auth);
+
 	const dispatch = useDispatch();
 
 	const handleSubmit = (values) => {
 		const data = {
-			jwt: localStorage.getItem("jwt"),
+			jwt: Cookies.get("jwt"),
 			order: {
 				restaurantId: cart.cartItems[0].food?.restaurant?.id,
 				deliveryAddress: {

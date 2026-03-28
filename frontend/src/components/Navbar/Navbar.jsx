@@ -11,7 +11,8 @@ import { useSelector } from "react-redux";
 
 const Navbar = () => {
 	const navigate = useNavigate();
-	const { auth, cart } = useSelector((state) => state);
+	const auth = useSelector((store) => store.auth);
+	const cart = useSelector((store) => store.cart);
 
 	const handleAvatarClick = () => {
 		if (auth.user?.role === "ROLE_CUSTOMER") {

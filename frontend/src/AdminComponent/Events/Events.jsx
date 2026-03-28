@@ -8,10 +8,9 @@ import Modal from "@mui/material/Modal";
 import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import { createEventAction } from "../../StateMangement/Restaurant/Action";
-
+import Cookies from "js-cookie";
 const style = {
 	position: "absolute",
 	top: "50%",
@@ -29,7 +28,7 @@ const Events = () => {
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 	const dispatch = useDispatch();
-	const jwt = localStorage.getItem("jwt");
+	const jwt = Cookies.get("jwt");
 	const restaurant = useSelector((store) => store.restaurant);
 
 	const handleSubmit = (e) => {

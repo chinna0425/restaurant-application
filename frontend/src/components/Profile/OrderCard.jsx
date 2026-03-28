@@ -1,5 +1,4 @@
 import { Button, Card } from "@mui/material";
-import React from "react";
 
 const OrderCard = ({ item, order }) => {
 	return (
