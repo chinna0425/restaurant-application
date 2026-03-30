@@ -13,8 +13,10 @@ function App() {
 	const jwt = Cookies.get("jwt");
 	const auth = useSelector((store) => store.auth);
 	useEffect(() => {
-		dispatch(getUser(auth.token || jwt));
-		dispatch(findCart(jwt));
+		if (auth.token || jwt) {
+			dispatch(getUser(auth.token || jwt));
+			dispatch(findCart(jwt));
+		}
 	}, [auth.token, jwt]);
 
 	useEffect(() => {

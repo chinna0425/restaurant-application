@@ -10,7 +10,7 @@ import Paper from "@mui/material/Paper";
 import CreateFoodCategoryForm from "./CreateFoodCategoryForm";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Cookies from "js-cookie";
+
 const orders = [1, 2, 3, 4, 5, 6];
 const style = {
 	position: "absolute",
@@ -27,7 +27,7 @@ const FoodCategoryTable = () => {
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
-	const { restaurant } = useSelector((store) => store);
+	const restaurant = useSelector((store) => store.restaurant);
 
 	return (
 		<Box>

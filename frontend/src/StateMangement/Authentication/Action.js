@@ -58,6 +58,7 @@ export const loginUser = (reqData) => async (dispatch) => {
 				secure: true,
 				sameSite: "Strict",
 			});
+			localStorage.setItem("role", data.role);
 		}
 		if (data.role === "ROLE_RESTAURANT_OWNER") {
 			reqData.navigate("/admin/restaurants");
@@ -123,8 +124,8 @@ export const addToFavorite =
 export const logOut = () => async (dispatch) => {
 	try {
 		Cookies.remove("jwt");
+		localStorage.removeItem("role");
 		dispatch({ type: LOGOUT });
-		console.log("logOut success");
 	} catch (error) {
 		console.log("Error", error);
 	}

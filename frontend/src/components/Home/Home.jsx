@@ -11,8 +11,10 @@ const Home = () => {
 	const jwt = Cookies.get("jwt");
 
 	useEffect(() => {
-		dispatch(getAllRestaurantsAction(jwt));
-	}, []);
+		if (jwt) {
+			dispatch(getAllRestaurantsAction(jwt));
+		}
+	}, [jwt]);
 
 	const restaurant = useSelector((store) => store.restaurant);
 	// console.log("Home restaurant", restaurant);

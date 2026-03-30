@@ -4,7 +4,7 @@ import Ingredients from "../Ingredients/Ingredients";
 import Menu from "../Menu/Menu";
 import Orders from "../Orders/Orders";
 import AdminSideBar from "./AdminSideBar";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import RestaurantDetails from "./RestaurantDetails";
 import AdminDashboard from "../AdminDashboard/AdminDashboard";
 import CreateMenuForm from "../Menu/CreateMenuForm";
@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { getRestaurantsCategory } from "../../StateMangement/Restaurant/Action";
 import { fetchRestaurantsOrder } from "../../StateMangement/RestaurantOrder/Action";
 import Cookies from "js-cookie";
+import NotFound from "../../components/NotFound/NotFound";
 const Admin = () => {
 	const dispatch = useDispatch();
 	const restaurant = useSelector((store) => store.restaurant);
@@ -42,14 +43,16 @@ const Admin = () => {
 				</div>
 				<div className="lg:w-[80%]">
 					<Routes>
-						<Route path="/" element={<AdminDashboard />}></Route>
-						<Route path="/orders" element={<Orders />}></Route>
-						<Route path="/menu" element={<Menu />}></Route>
-						<Route path="/food-category" element={<FoodCategory />}></Route>
-						<Route path="/ingredients" element={<Ingredients />}></Route>
-						<Route path="/event" element={<Events />}></Route>
-						<Route path="/details" element={<RestaurantDetails />}></Route>
-						<Route path="/add-food" element={<CreateMenuForm />}></Route>
+						<Route index element={<AdminDashboard />}></Route>
+						<Route path="orders" element={<Orders />}></Route>
+						<Route path="menu" element={<Menu />}></Route>
+						<Route path="food-category" element={<FoodCategory />}></Route>
+						<Route path="ingredients" element={<Ingredients />}></Route>
+						<Route path="event" element={<Events />}></Route>
+						<Route path="details" element={<RestaurantDetails />}></Route>
+						<Route path="add-food" element={<CreateMenuForm />}></Route>
+						<Route path="/not-found" element={<NotFound />} />
+						<Route path="*" element={<Navigate replace to="/not-found" />} />
 					</Routes>
 				</div>
 			</div>

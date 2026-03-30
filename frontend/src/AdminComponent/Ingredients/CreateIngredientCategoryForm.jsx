@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 const CreateIngredientCategoryForm = () => {
 	const dispatch = useDispatch();
 	const jwt = Cookies.get("jwt");
-	const { restaurant } = useSelector((store) => store);
+	const restaurant = useSelector((store) => store.restaurant);
 	const [formData, setFormData] = useState({
 		name: "",
 	});

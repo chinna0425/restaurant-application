@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import React from "react";
 import IngredientTable from "./IngredientTable";
 import IngredientCategoryTable from "./IngredientCategoryTable";
 

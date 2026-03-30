@@ -42,7 +42,8 @@ const IngredientTable = () => {
 
 	const dispatch = useDispatch();
 	const jwt = Cookies.get("jwt");
-	const { restaurant, ingredients } = useSelector((store) => store);
+	const restaurant = useSelector((store) => store.restaurant);
+	const ingredients = useSelector((store) => store.ingredients);
 
 	useEffect(() => {
 		dispatch(
