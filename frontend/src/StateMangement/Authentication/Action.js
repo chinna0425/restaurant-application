@@ -15,6 +15,9 @@ import {
 	REGISTER_FAILURE,
 	REGISTER_REQUEST,
 	REGISTER_SUCCESS,
+	USER_ORDERED_ADDRESSES_FAILURE,
+	USER_ORDERED_ADDRESSES_REQUEST,
+	USER_ORDERED_ADDRESSES_SUCCESS,
 } from "./ActionType";
 
 export const registerUser = (reqData) => async (dispatch) => {
@@ -24,12 +27,6 @@ export const registerUser = (reqData) => async (dispatch) => {
 			`${API_URL}/auth/signup`,
 			reqData.userData,
 		);
-
-		// if (data.role === "ROLE_RESTAURANT_OWNER") {
-		// 	reqData.navigate("/admin/restaurants");
-		// } else {
-		// 	reqData.navigate("/account/login");
-		// }
 
 		reqData.navigate("/account/login");
 		dispatch({ type: REGISTER_SUCCESS });
@@ -88,6 +85,23 @@ export const getUser = (jwt) => async (dispatch) => {
 		console.log("User profile data", data);
 	} catch (error) {
 		dispatch({ type: GET_USER_FAILURE, payload: error });
+		console.log("Error", error);
+	}
+};
+
+export const getUserOrderedAddresses = (jwt) => async (dispatch) => {
+	dispatch({ type: USER_ORDERED_ADDRESSES_REQUEST });
+	try {
+		const { data } = await axios.get(`${API_URL}/api/user/ordered-addresses`, {
+			headers: {
+				Authorization: `Bearer ${jwt}`,
+			},
+		});
+		console.log("----users ordereds----", data);
+		dispatch({ type: USER_ORDERED_ADDRESSES_SUCCESS, payload: data });
+		console.log("User profile data", data);
+	} catch (error) {
+		dispatch({ type: USER_ORDERED_ADDRESSES_FAILURE, payload: error });
 		console.log("Error", error);
 	}
 };

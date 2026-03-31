@@ -28,8 +28,8 @@ public class CartController {
     }
 
     @PutMapping("/cart-item/update")
-    public ResponseEntity<?> updateCartItemQuantity(@RequestBody UpdateCartItemReq req) throws Exception {
-        return ResponseEntity.status(HttpStatus.OK).body(cartService.updateCartItemQuantity(req.getCartItemId(), req.getQuantity()));
+    public ResponseEntity<?> updateCartItemQuantity(@RequestBody UpdateCartItemReq req,@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(cartService.updateCartItemQuantity(req.getCartItemId(), req.getQuantity(), userDetails.getId()));
     }
 
     @DeleteMapping("/cart-item/{id}/remove")

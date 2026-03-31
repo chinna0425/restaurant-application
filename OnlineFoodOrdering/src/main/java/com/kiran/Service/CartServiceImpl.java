@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class CartServiceImpl implements CartService {
 
@@ -41,89 +43,135 @@ public class CartServiceImpl implements CartService {
         if(cart == null){
             cart = new Cart();
             cart.setCustomer(user);
+            cart.setItems(new ArrayList<>());
             cart = cartJpaRepo.save(cart);
         }
 
-        // Check if item already exists
-        for(CartItem cartItem : cart.getItems()){
+        if (!cart.getItems().isEmpty()) {
+            Long existingRestaurantId = cart.getItems().get(0).getFood().getRestaurant().getId();
 
-            if(cartItem.getFood().getId().equals(food.getId())){
-
-                Integer newQuantity = cartItem.getQuantity() + req.getQuantity();
-
-                cartItem.setQuantity(newQuantity);
-
-                cartItem.setTotalPrice((double)(newQuantity * food.getPrice()));
-
-                return cartItemJpaRepo.save(cartItem);
+            if (!existingRestaurantId.equals(food.getRestaurant().getId())) {
+                throw new Exception("You cannot add items from multiple restaurants");
             }
         }
 
-        // Create new cart item
-        CartItem newCartItem = new CartItem();
+        CartItem targetItem = null;
 
-        newCartItem.setFood(food);
-        newCartItem.setCart(cart);
-        newCartItem.setQuantity(req.getQuantity());
-        newCartItem.setIngredients(req.getIngredients());
+        // Check if item already exists
+        for (CartItem cartItem : cart.getItems()) {
+            if (cartItem.getFood().getId().equals(food.getId())) {
+                targetItem = cartItem;
+                break;
+            }
+        }
 
-        newCartItem.setTotalPrice((double)(req.getQuantity() * food.getPrice()));
+        if (targetItem != null) {
+            Integer newQuantity = targetItem.getQuantity() + req.getQuantity();
+            targetItem.setQuantity(newQuantity);
+            targetItem.setTotalPrice((double) (newQuantity * food.getPrice()));
 
-        CartItem saved = cartItemJpaRepo.save(newCartItem);
+            cartItemJpaRepo.save(targetItem);
 
-        cart.getItems().add(saved);
+        } else {
+            // Create new cart item
+            CartItem newCartItem = new CartItem();
 
-        return saved;
+            newCartItem.setFood(food);
+            newCartItem.setCart(cart);
+            newCartItem.setQuantity(req.getQuantity());
+            newCartItem.setIngredients(req.getIngredients());
+            newCartItem.setTotalPrice((double) (req.getQuantity() * food.getPrice()));
+
+            CartItem saved = cartItemJpaRepo.save(newCartItem);
+
+            cart.getItems().add(saved);
+        }
+
+        Double total = 0.0;
+
+        for (CartItem item : cart.getItems()) {
+            total += item.getTotalPrice();
+        }
+
+        cart.setTotal(total);
+
+        cartJpaRepo.save(cart);
+
+        // return updated item
+        return targetItem != null ? targetItem : cart.getItems().get(cart.getItems().size() - 1);
     }
+
 
 
     @Override
-    public CartItem updateCartItemQuantity(Long cartItemId, Integer quantity) throws Exception {
-        CartItem cartItem=cartItemJpaRepo.findById(cartItemId).orElseThrow(()-> new ResourceNotFoundException("Cart item not found"));
-        cartItem.setQuantity(quantity);
-        cartItem.setTotalPrice((double)(cartItem.getFood().getPrice()*quantity));
+    public CartItem updateCartItemQuantity(Long cartItemId, Integer quantity, Long userId) throws Exception {
 
-        return cartItemJpaRepo.save(cartItem);
+        CartItem cartItem = cartItemJpaRepo.findById(cartItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
+
+        if (!cartItem.getCart().getCustomer().getId().equals(userId)) {
+            throw new Exception("Unauthorized");
+        }
+
+        Cart cart = cartItem.getCart();
+
+        // Handle remove case
+        if (quantity <= 0) {
+            cart.getItems().remove(cartItem);
+            cartItemJpaRepo.delete(cartItem);
+        } else {
+            cartItem.setQuantity(quantity);
+            cartItem.setTotalPrice((double) cartItem.getFood().getPrice() * quantity);
+            cartItemJpaRepo.save(cartItem);
+        }
+
+        // Recalculate total
+        cart.setTotal(calculateCartTotals(cart));
+
+        return cartItem ;
     }
 
+    @Override
     @Transactional
-    @Override
     public Cart removeItemFromCart(Long cartItemId, Long userId) throws Exception {
 
         Cart cart = cartJpaRepo.findByCustomerId(userId);
 
-        if(cart == null){
+        if (cart == null) {
             throw new ResourceNotFoundException("Cart not found");
         }
 
         CartItem cartItem = cartItemJpaRepo.findById(cartItemId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart item not found"));
 
-        if(!cartItem.getCart().getId().equals(cart.getId())){
+        // Ownership check
+        if (!cartItem.getCart().getId().equals(cart.getId())) {
             throw new Exception("Unauthorized");
         }
 
+        // Remove + delete
         cart.getItems().remove(cartItem);
+        cartItemJpaRepo.delete(cartItem);
 
-        double total = cart.getItems()
-                .stream()
-                .mapToDouble(CartItem::getTotalPrice)
-                .sum();
+        // Recalculate total
+        cart.setTotal(calculateCartTotals(cart));
 
-        cart.setTotal(total);
-
-        return cart;
+        return cartJpaRepo.save(cart); // IMPORTANT
     }
 
 
     @Override
-    public Double calculateCartTotals(Cart cart) throws Exception {
-        double total=0.0;
+    public Double calculateCartTotals(Cart cart) {
+
+        double total = 0.0;
+
         if (cart.getItems() == null) return total;
-        for(CartItem cartItem:cart.getItems()){
-            total+=cartItem.getFood().getPrice() * cartItem.getQuantity();
+
+        for (CartItem cartItem : cart.getItems()) {
+            total += cartItem.getTotalPrice();
         }
-        return (Double) total;
+
+        return total;
     }
 
     @Override

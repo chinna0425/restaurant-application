@@ -6,6 +6,7 @@ import com.kiran.exceptions.ResourceNotFoundException;
 import com.kiran.requestDto.CreateOrderReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,46 +40,86 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private CartServiceImpl cartService;
 
+    @Autowired
+    private CartJpaRepo cartJpaRepo;
 
     @Override
+    @Transactional
     public Order createOrder(CreateOrderReq req, Long userId) throws Exception {
-        User user=userService.getLoggedInUserProfile(userId);
-        Address shippingAddress=req.getDeliveryAddress();
+
+        // Get user
+        User user = userService.getLoggedInUserProfile(userId);
+
+        // Save address
+        Address shippingAddress = req.getDeliveryAddress();
         shippingAddress.setUser(user);
 
-        Address savedAddress=addressJpaRepo.save(shippingAddress);
+        Address savedAddress = addressJpaRepo.save(shippingAddress);
 
-        if(!user.getAddresses().contains(savedAddress)){
+        if (!user.getAddresses().contains(savedAddress)) {
             user.getAddresses().add(savedAddress);
             userJpaRepo.save(user);
         }
-        Restaurant restaurant=restaurantService.findRestaurantById(req.getRestaurantId());
 
-        Order newOrder=new Order();
+        // Get restaurant
+        Restaurant restaurant = restaurantService.findRestaurantById(req.getRestaurantId());
+
+        // Create order
+        Order newOrder = new Order();
         newOrder.setCustomer(user);
         newOrder.setCreatedAt(new Date());
         newOrder.setOrderStatus("PENDING");
         newOrder.setDeliveryAddress(savedAddress);
         newOrder.setRestaurant(restaurant);
 
-        Cart cart=cartService.findCartByUserId(userId);
-        List<OrderItem> orderItems=new ArrayList<>();
+        // Get cart
+        Cart cart = cartService.findCartByUserId(userId);
 
-        for(CartItem cartItem:cart.getItems()){
-            OrderItem orderItem=new OrderItem();
+        if (cart == null || cart.getItems().isEmpty()) {
+            throw new Exception("Cart is empty");
+        }
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        // Convert cart items → order items
+        for (CartItem cartItem : cart.getItems()) {
+
+            OrderItem orderItem = new OrderItem();
+
             orderItem.setFood(cartItem.getFood());
             orderItem.setIngredients(cartItem.getIngredients());
             orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setTotalPrice((double)(cartItem.getTotalPrice()));
-            OrderItem savedItem=orderItemJpaRepo.save(orderItem);
+            orderItem.setTotalPrice(cartItem.getTotalPrice());
+
+            OrderItem savedItem = orderItemJpaRepo.save(orderItem);
             orderItems.add(savedItem);
         }
 
+        // Set order details
         newOrder.setItems(orderItems);
         newOrder.setTotalPrice(cart.getTotal());
-        Order savedOrder=orderJpaRepo.save(newOrder);
+        newOrder.setTotalItems(orderItems.size());
+
+        // Calculate total amount (basic version)
+        double deliveryFee = 30;
+        double tax = cart.getTotal() * 0.18;
+
+        double totalAmount = cart.getTotal() + deliveryFee + tax;
+
+        newOrder.setTotalAmount((long) totalAmount);
+
+        //Save order
+        Order savedOrder = orderJpaRepo.save(newOrder);
+
         restaurant.getOrders().add(savedOrder);
 
+        // CLEAR CART 
+        cart.getItems().clear();
+        cart.setTotal(0.0);
+
+        cartJpaRepo.save(cart);
+
+        // Return response
         return savedOrder;
     }
 

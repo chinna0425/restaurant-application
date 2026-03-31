@@ -26,7 +26,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Autowired
     private UserJpaRepo userJpaRepo;
-
+/*
     @Override
     public Restaurant createRestaurant(CreateRestaurantReq req, User user) {
         Address address=addressJpaRepo.save(req.getAddress());
@@ -40,6 +40,25 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setOpeningHours(req.getOpeningHours());
         restaurant.setRegistrationDate(LocalDateTime.now());
         restaurant.setOwner(user);
+        return restaurantJpaRepo.save(restaurant);
+    } */
+
+    @Override
+    public Restaurant createRestaurant(CreateRestaurantReq req, User user) {
+
+        Address address = req.getAddress();
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(req.getName());
+        restaurant.setDescription(req.getDescription());
+        restaurant.setCuisineType(req.getCuisineType());
+        restaurant.setContactInformation(req.getContactInformation());
+        restaurant.setOpeningHours(req.getOpeningHours());
+        restaurant.setImages(req.getImages());
+        restaurant.setRegistrationDate(LocalDateTime.now());
+        restaurant.setOwner(user);
+        restaurant.setAddress(address);
+        address.setRestaurant(restaurant);
+
         return restaurantJpaRepo.save(restaurant);
     }
 

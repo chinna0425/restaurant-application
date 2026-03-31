@@ -28,4 +28,9 @@ public class UserController {
     public ResponseEntity<?> getAllUsers(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
     }
+
+    @GetMapping("/ordered-addresses")
+    public ResponseEntity<?> getUserOrderedAddresses(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserOrderedAddresses(userDetails.getId()));
+    }
 }

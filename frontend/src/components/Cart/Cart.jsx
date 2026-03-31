@@ -88,6 +88,8 @@ const Cart = () => {
 		return total;
 	};
 
+	const totalAmount = calculateTotal();
+
 	return (
 		<>
 			<main className="lg:flex justify-between">
@@ -115,7 +117,12 @@ const Cart = () => {
 						</div>
 						<div className="flex justify-between text-gray-400 mt-2">
 							<p>Total Pay</p>
-							<p>₹{calculateTotal() * 1.18 + 50}</p>
+							<p>
+								₹
+								{totalAmount === 0
+									? "0"
+									: totalAmount + totalAmount * 0.18 + 30}
+							</p>
 						</div>
 					</div>
 				</section>
@@ -126,14 +133,6 @@ const Cart = () => {
 							Choose Delivery Address
 						</h1>
 						<div className="flex gap-5 flex-wrap justify-center">
-							{[1, 1, 1, 1].map((item, index) => (
-								<AddressCard
-									key={index}
-									item={item}
-									showButton={true}
-									handleSelectAddress={createOrderUsingSelectedAddress}
-								/>
-							))}
 							<Card className="flex gap-5 w-64 p-5">
 								<AddLocationIcon />
 								<div className="space-y-3 text-gray-500">

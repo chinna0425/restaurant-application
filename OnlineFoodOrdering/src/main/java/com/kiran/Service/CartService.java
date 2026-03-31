@@ -8,7 +8,7 @@ public interface CartService {
 
     public CartItem addItemToCart(CreateCartItemReq req, Long userId) throws Exception;
 
-    public CartItem updateCartItemQuantity(Long cartItemId,Integer quantity) throws Exception;
+    public CartItem updateCartItemQuantity(Long cartItemId,Integer quantity,Long userId) throws Exception;
 
     public Cart removeItemFromCart(Long cartItemId,Long userId) throws Exception;
 

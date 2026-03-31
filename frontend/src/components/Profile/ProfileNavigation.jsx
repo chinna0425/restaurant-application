@@ -15,8 +15,8 @@ const menu = [
 	{ id: 1, title: "Orders", icon: <ShoppingBagIcon /> },
 	{ id: 2, title: "Favorites", icon: <FavoriteIcon /> },
 	{ id: 3, title: "Address", icon: <Home /> },
-	{ id: 4, title: "Payments", icon: <AccountBalanceWalletIcon /> },
-	{ id: 5, title: "Notifications", icon: <NotificationsActiveIcon /> },
+	//{ id: 4, title: "Payments", icon: <AccountBalanceWalletIcon /> },
+	//{ id: 5, title: "Notifications", icon: <NotificationsActiveIcon /> },
 	{ id: 6, title: "Events", icon: <EventIcon /> },
 	{ id: 7, title: "Logout", icon: <LogoutIcon /> },
 ];
@@ -42,7 +42,7 @@ const ProfileNavigation = ({ open, handleClose }) => {
 				variant="permanent"
 				anchor="left"
 			>
-				<div className="w-[50vw] lg:w-[20vw] h-[100vh] pt-18 flex flex-col justify-center text-xl gap-8">
+				<div className="w-[50vw] lg:w-[20vw] h-[90vh] pt-25 flex flex-col justify-between text-xl">
 					{menu.map((item, i) => (
 						<React.Fragment key={item.id}>
 							<div

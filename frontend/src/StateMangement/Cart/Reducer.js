@@ -41,12 +41,23 @@ const cartReducer = (state = initialState, action) => {
 				cart: action.payload,
 				cartItems: action.payload.items,
 			};
-		case ADD_ITEM_TO_CART_SUCCESS:
+		case ADD_ITEM_TO_CART_SUCCESS: {
+			const existingItem = state.cartItems.find(
+				(item) => item.id === action.payload.id,
+			);
+
 			return {
 				...state,
 				loading: false,
-				cartItems: [action.payload, ...state.cartItems],
+				cartItems: existingItem
+					? state.cartItems.map((item) =>
+							item.id === action.payload.id
+								? { ...item, ...action.payload }
+								: item,
+						)
+					: [...state.cartItems, action.payload],
 			};
+		}
 		case UPDATE_CARTITEM_SUCCESS:
 			return {
 				...state,
