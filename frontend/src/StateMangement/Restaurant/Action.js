@@ -185,7 +185,7 @@ export const createEventAction = ({ data, jwt, restaurantId }) => {
 		dispatch({ type: CREATE_EVENTS_REQUEST });
 		try {
 			const res = await Api.post(
-				`/api/admin/events/restaurant/${restaurantId}`,
+				`/admin/event/restaurant/${restaurantId}`,
 				data,
 				{
 					headers: {
@@ -224,7 +224,7 @@ export const deleteEventAction = ({ eventId, jwt }) => {
 	return async (dispatch) => {
 		dispatch({ type: DELETE_EVENTS_REQUEST });
 		try {
-			const res = await Api.delete(`/api/admin/events/${eventId}`, {
+			const res = await Api.delete(`/admin/event/${eventId}`, {
 				headers: {
 					Authorization: `Bearer ${jwt}`,
 				},
@@ -242,14 +242,11 @@ export const getRestaurantEvents = ({ restaurantId, jwt }) => {
 	return async (dispatch) => {
 		dispatch({ type: GET_RESTAURANTS_EVENTS_REQUEST });
 		try {
-			const res = await Api.get(
-				`/api/admin/events/restaurant/${restaurantId}`,
-				{
-					headers: {
-						Authorization: `Bearer ${jwt}`,
-					},
+			const res = await Api.get(`/admin/event/restaurant/${restaurantId}`, {
+				headers: {
+					Authorization: `Bearer ${jwt}`,
 				},
-			);
+			});
 			dispatch({ type: GET_RESTAURANTS_EVENTS_SUCCESS, payload: res.data });
 			console.log("Get restaurants events", res.data);
 		} catch (error) {

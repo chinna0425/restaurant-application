@@ -84,9 +84,8 @@ export const updateCartItem = (reqData) => {
 					Authorization: `Bearer ${reqData.jwt}`,
 				},
 			});
-			console.log("update cartItem ", data);
+			console.log("updated cartItem ", data);
 			dispatch({ type: UPDATE_CARTITEM_SUCCESS, payload: data });
-			console.log("after dispatch", data);
 		} catch (error) {
 			console.log("catch error ", error);
 			dispatch({ type: UPDATE_CARTITEM_FAILURE, payload: error.message });

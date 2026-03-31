@@ -4,13 +4,21 @@ import Box from "@mui/material/Box";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
-import { createEventAction } from "../../StateMangement/Restaurant/Action";
+import {
+	createEventAction,
+	getRestaurantEvents,
+} from "../../StateMangement/Restaurant/Action";
 import Cookies from "js-cookie";
+import { uploadImageToCloudinary } from "../util/UploadToCloudinary";
+import { CircularProgress, IconButton } from "@mui/material";
+import EventCard from "../../components/Profile/EventCard";
 const style = {
 	position: "absolute",
 	top: "50%",
@@ -53,8 +61,27 @@ const Events = () => {
 			}),
 		);
 
+		setFormValues({
+			image: "",
+			location: "",
+			name: "",
+			startedAt: null,
+			endsAt: null,
+		});
+
 		console.log("final data:", data);
 	};
+
+	useEffect(() => {
+		if (jwt) {
+			dispatch(
+				getRestaurantEvents({
+					restaurantId: restaurant.usersRestaurant?.id,
+					jwt,
+				}),
+			);
+		}
+	}, []);
 
 	const [formValues, setFormValues] = useState({
 		image: "",
@@ -63,6 +90,27 @@ const Events = () => {
 		startedAt: null,
 		endsAt: null,
 	});
+
+	const handleImageUpload = async (e) => {
+		const file = e.target.files[0];
+
+		if (!file) return;
+
+		e.target.value = null;
+
+		setUploadImage(true);
+		const imageUrl = await uploadImageToCloudinary(file);
+
+		setFormValues({ ...formValues, image: imageUrl });
+
+		setUploadImage(false);
+	};
+
+	const [uploadImage, setUploadImage] = useState(false);
+
+	const handleRemoveUploadedImage = () => {
+		setFormValues({ ...formValues, image: "" });
+	};
 
 	const handleFormChange = (e) => {
 		const { name, value } = e.target;
@@ -89,15 +137,52 @@ const Events = () => {
 					<Box sx={style}>
 						<form onSubmit={handleSubmit}>
 							<Grid container spacing={2}>
-								<Grid size={{ xs: 12 }}>
-									<TextField
-										name="image"
-										label="Image URL"
-										variant="outlined"
-										fullWidth
-										value={formValues.image}
-										onChange={handleFormChange}
-									/>
+								<Grid className="flex flex-wrap gap-5" size={{ xs: 12 }}>
+									{!formValues.image && (
+										<Fragment>
+											<input
+												type="file"
+												accept="image/*"
+												id="fileInput"
+												style={{ display: "none" }}
+												onChange={handleImageUpload}
+											/>
+											<label className="relative" htmlFor="fileInput">
+												<span className="w-24 h-24 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-600">
+													<AddPhotoAlternateIcon className="text-white" />
+												</span>
+												{uploadImage && (
+													<div className="absolute left-0 right-0 top-0 bottom-0 w-24 h-24 flex justify-center items-center">
+														<CircularProgress />
+													</div>
+												)}
+											</label>
+										</Fragment>
+									)}
+									{formValues.image && (
+										<div className="flex flex-wrap gap-2">
+											<div className="relative">
+												<img
+													className="w-24 h-24 object-cover rounded-2xl"
+													src={formValues.image}
+													alt="upload"
+												/>
+												<IconButton
+													size="small"
+													sx={{
+														position: "absolute",
+														top: 0,
+														right: 0,
+														outline: "none",
+														color: "red",
+													}}
+													onClick={handleRemoveUploadedImage}
+												>
+													<CloseIcon sx={{ fontSize: "1.2rem" }} />
+												</IconButton>
+											</div>
+										</div>
+									)}
 								</Grid>
 								<Grid size={{ xs: 12 }}>
 									<TextField
@@ -189,6 +274,14 @@ const Events = () => {
 						</form>
 					</Box>
 				</Modal>
+			</div>
+			<div className="pb-5">
+				<h2 className="text-2xl font-semibold mb-4">Events List</h2>
+				<div className="mt-5 px-5 flex justify-space-between flex-wrap gap-5">
+					{restaurant.restaurantsEvents?.map((event) => (
+						<EventCard key={event.id} event={event} />
+					))}
+				</div>
 			</div>
 		</div>
 	);

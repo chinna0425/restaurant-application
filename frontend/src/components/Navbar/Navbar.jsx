@@ -42,13 +42,13 @@ const Navbar = () => {
 					{auth.user ? (
 						<Avatar
 							onClick={handleAvatarClick}
-							sx={{ bgcolor: "white", color: pink.A400 }}
+							sx={{ bgcolor: "white", color: pink.A400, cursor: "pointer" }}
 						>
 							{auth.user?.fullName?.charAt(0)?.toUpperCase()}
 						</Avatar>
 					) : (
 						<IconButton onClick={() => navigate("/account/login")}>
-							<Person />
+							<Person sx={{ cursor: "pointer" }} />
 						</IconButton>
 					)}
 				</div>

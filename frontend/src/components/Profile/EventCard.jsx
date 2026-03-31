@@ -7,27 +7,43 @@ import {
 	Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteEventAction } from "../../StateMangement/Restaurant/Action";
+import { useDispatch } from "react-redux";
+import Cookies from "js-cookie";
 
-const EventCard = () => {
+const EventCard = ({ event }) => {
+	const role = localStorage.getItem("role")?.trim();
+	const dispatch = useDispatch();
+	const jwt = Cookies.get("jwt");
+
+	const handleDeleteEvent = (id) => {
+		dispatch(deleteEventAction({ eventId: id, jwt }));
+	};
+
 	return (
-		<div>
+		<div className="rounded-lg hover:shadow-lg">
 			<Card sx={{ width: 345 }}>
-				<CardMedia
-					sx={{ height: 345 }}
-					image="https://cdn.pixabay.com/photo/2022/06/27/05/38/spices-7286740_1280.jpg"
-				/>
+				<CardMedia sx={{ height: 345 }} image={event.image} />
 				<CardContent>
-					<Typography variant="h5">Indian Fast Food</Typography>
-					<Typography variant="body2">50% off on your first order</Typography>
+					<Typography variant="h5">Event by {event.restaurantName}</Typography>
+					<Typography variant="body2">{event.name}</Typography>
 					<div className="py-2 space-y-2">
-						<p>{"mumbai"}</p>
-						<p className="text-sm text-blue-500">Febrauray 14, 2024 12:00 AM</p>
-						<p className="text-sm text-red-500">Febrauray 15, 2024 12:00 AM</p>
+						<p>{event.location}</p>
+						<p className="text-sm text-blue-500">
+							{new Date(event.startTime).toLocaleString()}
+						</p>
+						<p className="text-sm text-red-500">
+							{new Date(event.endTime).toLocaleString()}
+						</p>
 					</div>
 				</CardContent>
-				{false && (
+				{role === "ROLE_RESTAURANT_OWNER" && (
 					<CardActions>
-						<IconButton>
+						<IconButton
+							variant="outlined"
+							color="error"
+							onClick={() => handleDeleteEvent(event.id)}
+						>
 							<DeleteIcon />
 						</IconButton>
 					</CardActions>

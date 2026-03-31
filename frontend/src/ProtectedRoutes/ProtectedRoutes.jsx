@@ -15,7 +15,7 @@ const ProtectedRoutes = ({ allowedRoles }) => {
 		return <Navigate to="/not-found" replace />;
 	}
 
-	// ✅ Allowed
+	//  Allowed
 	return <Outlet />;
 };
 

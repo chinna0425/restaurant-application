@@ -79,6 +79,15 @@ const Cart = () => {
 		dispatch(createOrder(data));
 	};
 
+	const calculateTotal = () => {
+		const total = cart.cartItems?.reduce(
+			(total, item) => total + item.totalPrice,
+			0,
+		);
+		console.log("calculated total", total);
+		return total;
+	};
+
 	return (
 		<>
 			<main className="lg:flex justify-between">
@@ -92,21 +101,21 @@ const Cart = () => {
 						<div className="space-y-3">
 							<div className="flex justify-between text-gray-400">
 								<p>Item Total</p>
-								<p>₹{cart.cart?.total}</p>
+								<p>₹{calculateTotal()}</p>
 							</div>
 							<div className="flex justify-between text-gray-400">
 								<p>Delivery Fee</p>
-								<p>₹50</p>
+								<p>{cart.cartItems?.length === 0 ? "₹0" : "₹30"}</p>
 							</div>
 							<div className="flex justify-between text-gray-400">
 								<p>GST and Restaurant Charges</p>
-								<p>₹33</p>
+								<p>{cart.cartItems?.length === 0 ? "0%" : "18%"}</p>
 							</div>
 							<Divider />
 						</div>
 						<div className="flex justify-between text-gray-400 mt-2">
 							<p>Total Pay</p>
-							<p>₹{cart.cart?.total + 33 + 50}</p>
+							<p>₹{calculateTotal() * 1.18 + 50}</p>
 						</div>
 					</div>
 				</section>

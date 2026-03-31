@@ -76,7 +76,6 @@ public class OrderServiceImpl implements OrderService{
 
         newOrder.setItems(orderItems);
         newOrder.setTotalPrice(cart.getTotal());
-
         Order savedOrder=orderJpaRepo.save(newOrder);
         restaurant.getOrders().add(savedOrder);
 
