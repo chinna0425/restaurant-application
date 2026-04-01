@@ -3,6 +3,7 @@ import OrderCard from "./OrderCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersOrders } from "../../StateMangement/Order/Action";
 import Cookies from "js-cookie";
+import "./shared.css";
 
 const Orders = () => {
 	const order = useSelector((store) => store.order);
@@ -16,10 +17,24 @@ const Orders = () => {
 		<div className="flex items-center flex-col">
 			<h1 className="text-xl text-center py-7 font-semibold">My Orders</h1>
 			<div className="space-y-5 w-full lg:w-1/2">
-				{order.orders.map((order) =>
-					order.items.map((item, index) => (
-						<OrderCard key={`${item}-${index}`} item={item} order={order} />
-					)),
+				{order.orders?.length > 0 ? (
+					order.orders.map((order) =>
+						order.items.map((item, index) => (
+							<OrderCard key={`${item}-${index}`} item={item} order={order} />
+						)),
+					)
+				) : (
+					<div className="home-data-notfound-container">
+						<img
+							src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-536.jpg?size=626&ext=jpg"
+							alt="no-data"
+							className="no-data-image"
+							loading="lazy"
+						/>
+						<p className="text-gray-400 text-lg mt-5">
+							No orders found. Start ordering your favorite meals now!
+						</p>
+					</div>
 				)}
 			</div>
 		</div>

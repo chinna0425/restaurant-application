@@ -16,6 +16,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../../StateMangement/Order/Action";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import "./Cart.css";
 
 const style = {
 	position: "absolute",
@@ -58,6 +60,7 @@ const Cart = () => {
 	const handleClose = () => setOpen(false);
 	const cart = useSelector((store) => store.cart);
 	const auth = useSelector((store) => store.auth);
+	const navigate = useNavigate();
 
 	const dispatch = useDispatch();
 
@@ -92,63 +95,88 @@ const Cart = () => {
 
 	return (
 		<>
-			<main className="lg:flex justify-between">
-				<section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
-					{cart.cartItems?.map((item) => (
-						<CartItem key={item.id} item={item} />
-					))}
-					<Divider />
-					<div className="billDetails px-5 text-sm">
-						<p className="font-extralight py-5">Bill Details</p>
-						<div className="space-y-3">
-							<div className="flex justify-between text-gray-400">
-								<p>Item Total</p>
-								<p>₹{calculateTotal()}</p>
-							</div>
-							<div className="flex justify-between text-gray-400">
-								<p>Delivery Fee</p>
-								<p>{cart.cartItems?.length === 0 ? "₹0" : "₹30"}</p>
-							</div>
-							<div className="flex justify-between text-gray-400">
-								<p>GST and Restaurant Charges</p>
-								<p>{cart.cartItems?.length === 0 ? "0%" : "18%"}</p>
-							</div>
-							<Divider />
-						</div>
-						<div className="flex justify-between text-gray-400 mt-2">
-							<p>Total Pay</p>
-							<p>
-								₹
-								{totalAmount === 0
-									? "0"
-									: totalAmount + totalAmount * 0.18 + 30}
-							</p>
-						</div>
-					</div>
-				</section>
-				<Divider orientation="vertical" flexItem />
-				<section className="lg:w-[70%] flex justify-center px-5 pb-10 lg:pb:0">
-					<div>
-						<h1 className="text-center font-semibold text-2xl py-10">
-							Choose Delivery Address
-						</h1>
-						<div className="flex gap-5 flex-wrap justify-center">
-							<Card className="flex gap-5 w-64 p-5">
-								<AddLocationIcon />
-								<div className="space-y-3 text-gray-500">
-									<h1 className="font-semibold text-lg text-white">
-										Add New Address
-									</h1>
-
-									<Button variant="outlined" fullWidth onClick={handleOpen}>
-										Add
-									</Button>
+			{cart.cartItems?.length > 0 ? (
+				<main className="lg:flex justify-between">
+					<section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
+						{cart.cartItems?.map((item) => (
+							<CartItem key={item.id} item={item} />
+						))}
+						<Divider />
+						<div className="billDetails px-5 text-sm">
+							<p className="font-extralight py-5">Bill Details</p>
+							<div className="space-y-3">
+								<div className="flex justify-between text-gray-400">
+									<p>Item Total</p>
+									<p>₹{calculateTotal()}</p>
 								</div>
-							</Card>
+								<div className="flex justify-between text-gray-400">
+									<p>Delivery Fee</p>
+									<p>{cart.cartItems?.length === 0 ? "₹0" : "₹30"}</p>
+								</div>
+								<div className="flex justify-between text-gray-400">
+									<p>GST and Restaurant Charges</p>
+									<p>{cart.cartItems?.length === 0 ? "0%" : "18%"}</p>
+								</div>
+								<Divider />
+							</div>
+							<div className="flex justify-between text-gray-400 mt-2">
+								<p>Total Pay</p>
+								<p>
+									₹
+									{totalAmount === 0
+										? "0"
+										: totalAmount + totalAmount * 0.18 + 30}
+								</p>
+							</div>
 						</div>
+					</section>
+
+					<Divider orientation="vertical" flexItem />
+					<section className="lg:w-[70%] flex justify-center px-5 pb-10 lg:pb:0">
+						<div>
+							<h1 className="text-center font-semibold text-2xl py-10">
+								Choose Delivery Address
+							</h1>
+							<div className="flex gap-5 flex-wrap justify-center">
+								<Card className="flex gap-5 w-64 p-5">
+									<AddLocationIcon />
+									<div className="space-y-3 text-gray-500">
+										<h1 className="font-semibold text-lg text-white">
+											Add New Address
+										</h1>
+
+										<Button variant="outlined" fullWidth onClick={handleOpen}>
+											Add
+										</Button>
+									</div>
+								</Card>
+							</div>
+						</div>
+					</section>
+				</main>
+			) : (
+				<div className="cart-page-loader-container">
+					<div className="cart-page-inner-container">
+						<img
+							src="https://res.cloudinary.com/chinna25/image/upload/v1694065979/Layer_2_pepuaf.png"
+							alt="no-cart-items"
+							className="cart-empty-image"
+						/>
+						<h1 className="cart-page-no-orders-title">No Orders Yet!</h1>
+						<p className="cart-empty-para">
+							Your cart is empty. Add something from the menu.
+						</p>
+						<Button
+							variant="contained"
+							type="button"
+							onClick={() => navigate("/")}
+							sx={{ marginTop: "10px" }}
+						>
+							Order now
+						</Button>
 					</div>
-				</section>
-			</main>
+				</div>
+			)}
 			<Modal
 				open={open}
 				onClose={handleClose}

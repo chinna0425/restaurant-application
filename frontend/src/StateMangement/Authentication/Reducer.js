@@ -20,7 +20,7 @@ import {
 
 const initialState = {
 	user: null,
-	isLoading: false,
+	loading: false,
 	error: null,
 	jwt: null,
 	favorites: [],
@@ -38,35 +38,35 @@ export const authReducer = (state = initialState, action) => {
 		case REGISTER_SUCCESS:
 			return {
 				...state,
-				isLoading: false,
+				loading: false,
 				jwt: null,
 				success: "Register Success",
 			};
 		case LOGIN_SUCCESS:
 			return {
 				...state,
-				isLoading: false,
+				loading: false,
 				jwt: action.payload,
 				success: "Login Success",
 			};
 		case GET_USER_SUCCESS:
 			return {
 				...state,
-				isLoading: false,
+				loading: false,
 				user: action.payload,
 				favorites: action.payload.favourites,
 			};
 		case USER_ORDERED_ADDRESSES_SUCCESS:
 			return {
 				...state,
-				isLoading: false,
+				loading: false,
 				addresses: action.payload,
 			};
 
 		case ADD_TO_FAVORITE_SUCCESS:
 			return {
 				...state,
-				isLoading: false,
+				loading: false,
 				error: null,
 				favorites: isPresentInFavorites(state.favorites, action.payload)
 					? state.favorites.filter((item) => item.id !== action.payload.id)
@@ -80,7 +80,7 @@ export const authReducer = (state = initialState, action) => {
 		case ADD_TO_FAVORITE_FAILURE:
 			return {
 				...state,
-				isLoading: false,
+				loading: false,
 				error: action.payload,
 				success: null,
 			};

@@ -9,6 +9,7 @@ import PaymentSuccess from "../components/PaymentSuccess/PaymentSuccess";
 import NotFound from "../components/NotFound/NotFound";
 import ProtectedRoutes from "../ProtectedRoutes/ProtectedRoutes";
 import AuthRoute from "../ProtectedRoutes/AuthRoute";
+import RoleBasedRedirect from "../components/RoleBasedRedirect/RoleBasedRedirect";
 
 const CustomerRoutes = () => {
 	return (
@@ -24,7 +25,7 @@ const CustomerRoutes = () => {
 						<>
 							<Navbar />
 							<Routes>
-								<Route path="/" element={<Home />} />
+								<Route path="/" element={<RoleBasedRedirect />} />
 								<Route
 									path="/account/:type"
 									element={

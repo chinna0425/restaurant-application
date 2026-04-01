@@ -5,10 +5,13 @@ import MultiItemCarousal from "./MultiItemCarousal";
 import { useEffect } from "react";
 import { getAllRestaurantsAction } from "../../StateMangement/Restaurant/Action";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const Home = () => {
 	const dispatch = useDispatch();
 	const jwt = Cookies.get("jwt");
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (jwt) {
@@ -44,9 +47,32 @@ const Home = () => {
 					Order From Our Handpicked Favourites
 				</h1>
 				<div className="flex flex-wrap items-center justify-around gap-5">
-					{restaurant.restaurants.map((item, index) => (
-						<RestaurantCard key={index} item={item} />
-					))}
+					{restaurant.restaurants?.length > 0 ? (
+						restaurant.restaurants?.map((item, index) => (
+							<RestaurantCard key={index} item={item} />
+						))
+					) : (
+						<div className="home-data-notfound-container">
+							<img
+								src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-536.jpg?size=626&ext=jpg"
+								alt="no-data"
+								className="no-data-image"
+								loading="lazy"
+							/>
+
+							<p className="sort-left-desc">
+								Please log in to view your favorite restaurants.
+							</p>
+							<Button
+								variant="contained"
+								type="button"
+								sx={{ marginTop: "20px" }}
+								onClick={() => navigate("/account/login")}
+							>
+								Login
+							</Button>
+						</div>
+					)}
 				</div>
 			</section>
 		</div>

@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 import { uploadImageToCloudinary } from "../util/UploadToCloudinary";
 import { CircularProgress, IconButton } from "@mui/material";
 import EventCard from "../../components/Profile/EventCard";
+import "./Events.css";
 const style = {
 	position: "absolute",
 	top: "50%",
@@ -275,14 +276,35 @@ const Events = () => {
 					</Box>
 				</Modal>
 			</div>
-			<div className="pb-5">
-				<h2 className="text-2xl font-semibold mb-4">Events List</h2>
-				<div className="mt-5 px-5 flex justify-space-between flex-wrap gap-5">
-					{restaurant.restaurantsEvents?.map((event) => (
-						<EventCard key={event.id} event={event} />
-					))}
+			{restaurant.events?.length > 0 ? (
+				<div className="pb-5">
+					<h2 className="text-2xl font-semibold mb-4">Events List</h2>
+					<div className="mt-5 px-5 flex justify-space-between flex-wrap gap-5">
+						{restaurant.restaurantsEvents?.map((event) => (
+							<EventCard key={event.id} event={event} />
+						))}
+					</div>
 				</div>
-			</div>
+			) : (
+				<div className="home-data-notfound-container">
+					<img
+						src="https://media.istockphoto.com/id/1338874207/vector/upcoming-events-speech-bubble-banner-with-upcoming-events-text-glassmorphism-style-for.jpg?s=612x612&w=0&k=20&c=4nAQLO0c4rMWwMPOMTbn_6ldPYdB5J4ruSfOLYg2qik="
+						alt="upcoming-events"
+						className="no-data-image"
+						loading="lazy"
+					/>
+
+					<p className="text-gray-400 text-lg mt-5 text-center">
+						Add events to keep the customers engaged and informed about the
+						latest happenings at your restaurant!
+						<br />
+						Click on the "Create New Event" button to get started.
+						<br />
+						Regularly updating your events can help attract more customers and
+						boost your restaurant's visibility.
+					</p>
+				</div>
+			)}
 		</div>
 	);
 };
