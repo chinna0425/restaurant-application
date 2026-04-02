@@ -20,6 +20,7 @@ const Home = () => {
 	}, [jwt]);
 
 	const restaurant = useSelector((store) => store.restaurant);
+	const auth = useSelector((store) => store.auth);
 	// console.log("Home restaurant", restaurant);
 
 	return (
@@ -47,13 +48,7 @@ const Home = () => {
 					Order From Our Handpicked Favourites
 				</h1>
 
-				{restaurant.restaurants?.length > 0 ? (
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-						{restaurant.restaurants.map((item, index) => (
-							<RestaurantCard key={index} item={item} />
-						))}
-					</div>
-				) : (
+				{!auth.user ? (
 					<div className="flex flex-col items-center justify-center h-[60vh] text-center">
 						<img
 							src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-536.jpg?size=626&ext=jpg"
@@ -73,6 +68,28 @@ const Home = () => {
 						>
 							Login
 						</Button>
+					</div>
+				) : restaurant.restaurants?.length === 0 ? (
+					<div className="flex flex-col items-center justify-center h-[60vh] text-center">
+						<img
+							src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-536.jpg?size=626&ext=jpg"
+							alt="no-data"
+							className="w-72 mb-5"
+							loading="lazy"
+						/>
+
+						<p className="text-gray-400 text-lg">
+							No restaurants found. Check back later for updates!
+							<br />
+							Meanwhile, explore our delicious meals and discover your new
+							favorites!
+						</p>
+					</div>
+				) : (
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+						{restaurant.restaurants.map((item, index) => (
+							<RestaurantCard key={index} item={item} />
+						))}
 					</div>
 				)}
 			</section>
