@@ -30,7 +30,7 @@ const Events = () => {
 					<img
 						src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-536.jpg?size=626&ext=jpg"
 						alt="no-data"
-						className="w-72 mb-5"
+						className="w-100 mb-5"
 						loading="lazy"
 					/>
 
