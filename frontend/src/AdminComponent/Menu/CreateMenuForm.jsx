@@ -34,28 +34,41 @@ const initialValues = {
 	images: [],
 };
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+import * as Yup from "yup";
 
 const CreateMenuForm = () => {
 	const dispatch = useDispatch();
 	const jwt = Cookies.get("jwt");
 	const restaurant = useSelector((store) => store.restaurant);
 	const ingredients = useSelector((store) => store.ingredients);
+
+	const validationSchema = Yup.object({
+		name: Yup.string().required("Name is required"),
+		description: Yup.string().required("Description is required"),
+		price: Yup.number()
+			.typeError("Price must be a number")
+			.integer("Price must be integer")
+			.positive("Price must be greater than 0")
+			.required("Price is required"),
+		category: Yup.object().required("Category is required"),
+		images: Yup.array().min(1, "At least one image is required"),
+	});
 	const formik = useFormik({
 		initialValues,
+		validationSchema,
 		onSubmit: (values) => {
 			values.restaurantId = restaurant.usersRestaurant?.id;
 			values.images = values.images.map((img) => img.url);
 			dispatch(createMenuItem({ menu: values, jwt }));
 			console.log("data", values);
 		},
+		validateOnMount: true,
 	});
 	const handleImageUpload = async (e) => {
 		const file = e.target.files[0];
 		if (!file) return;
 		e.target.value = null;
-		// Check BEFORE upload
+
 		const isDuplicate = formik.values.images.some(
 			(img) => img.name === file.name,
 		);
@@ -72,6 +85,7 @@ const CreateMenuForm = () => {
 				name: file.name,
 			},
 		]);
+
 		setUploadImage(false);
 	};
 	const [uploadImage, setUploadImage] = useState(false);
@@ -116,6 +130,7 @@ const CreateMenuForm = () => {
 									</div>
 								)}
 							</label>
+
 							<div className="flex flex-wrap gap-2">
 								{formik.values.images.map((image, index) => (
 									<div className="relative" key={`${image?.name}-${index}`}>
@@ -149,6 +164,9 @@ const CreateMenuForm = () => {
 								variant="outlined"
 								onChange={formik.handleChange}
 								value={formik.values.name}
+								onBlur={formik.handleBlur}
+								error={formik.touched.name && Boolean(formik.errors.name)}
+								helperText={formik.touched.name && formik.errors.name}
 							></TextField>
 						</Grid>
 						<Grid size={{ xs: 12 }}>
@@ -159,7 +177,15 @@ const CreateMenuForm = () => {
 								label="Description"
 								variant="outlined"
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 								value={formik.values.description}
+								error={
+									formik.touched.description &&
+									Boolean(formik.errors.description)
+								}
+								helperText={
+									formik.touched.description && formik.errors.description
+								}
 							></TextField>
 						</Grid>
 						<Grid size={{ xs: 12, lg: 6 }}>
@@ -169,12 +195,27 @@ const CreateMenuForm = () => {
 								name="price"
 								label="Price"
 								variant="outlined"
-								onChange={formik.handleChange}
+								onChange={(e) => {
+									const value = e.target.value.replace(/[^0-9]/g, ""); // 🔥 only digits
+									formik.setFieldValue("price", value);
+								}}
+								inputProps={{
+									inputMode: "numeric",
+									pattern: "[0-9]*",
+								}}
 								value={formik.values.price}
+								onBlur={formik.handleBlur}
+								error={formik.touched.price && Boolean(formik.errors.price)}
+								helperText={formik.touched.price && formik.errors.price}
 							></TextField>
 						</Grid>
 						<Grid size={{ xs: 12, lg: 6 }}>
-							<FormControl fullWidth>
+							<FormControl
+								fullWidth
+								error={
+									formik.touched.category && Boolean(formik.errors.category)
+								}
+							>
 								<InputLabel id="demo-simple-select-label">
 									Food Category
 								</InputLabel>
@@ -190,6 +231,7 @@ const CreateMenuForm = () => {
 										);
 										formik.setFieldValue("category", selected);
 									}}
+									onBlur={() => formik.setFieldTouched("category", true)}
 								>
 									{restaurant.categories?.map((item) => (
 										<MenuItem key={item.id} value={item}>
@@ -197,6 +239,11 @@ const CreateMenuForm = () => {
 										</MenuItem>
 									))}
 								</Select>
+								{formik.touched.category && formik.errors.category && (
+									<p className="text-red-500 text-sm mt-1">
+										{formik.errors.category}
+									</p>
+								)}
 							</FormControl>
 						</Grid>
 
@@ -225,7 +272,6 @@ const CreateMenuForm = () => {
 											))}
 										</Box>
 									)}
-									// MenuProps={MenuProps}
 								>
 									{ingredients.ingredients?.map((item, index) => (
 										<MenuItem key={item.id || index} value={item}>
@@ -275,7 +321,12 @@ const CreateMenuForm = () => {
 						</Grid>
 					</Grid>
 					<div className="text-center">
-						<Button variant="contained" color="primary" type="submit">
+						<Button
+							variant="contained"
+							color="primary"
+							type="submit"
+							disabled={!(formik.isValid && formik.dirty)}
+						>
 							Add Menu Item
 						</Button>
 					</div>

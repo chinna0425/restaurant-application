@@ -51,10 +51,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const Cart = () => {
-	const createOrderUsingSelectedAddress = (data) => {
-		console.log(data);
-	};
-
 	const [open, setOpen] = React.useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -142,7 +138,7 @@ const Cart = () => {
 									<AddLocationIcon />
 									<div className="space-y-3 text-gray-500">
 										<h1 className="font-semibold text-lg text-white">
-											Add New Address
+											Add Address
 										</h1>
 
 										<Button variant="outlined" fullWidth onClick={handleOpen}>
@@ -189,85 +185,88 @@ const Cart = () => {
 						validationSchema={validationSchema}
 						onSubmit={handleSubmit}
 					>
-						<Form>
-							<Grid container spacing={2}>
-								<Grid size={{ xs: 12 }}>
-									<Field
-										as={TextField}
-										name="streetAddress"
-										label="Street Address"
-										fullWidth
-										variant="outlined"
-									/>
-									<ErrorMessage
-										name="streetAddress"
-										component="div"
-										style={{ color: "red" }}
-									/>
-								</Grid>
+						{({ isValid, dirty }) => (
+							<Form>
+								<Grid container spacing={2}>
+									<Grid size={{ xs: 12 }}>
+										<Field
+											as={TextField}
+											name="streetAddress"
+											label="Street Address"
+											fullWidth
+											variant="outlined"
+										/>
+										<ErrorMessage
+											name="streetAddress"
+											component="div"
+											style={{ color: "red" }}
+										/>
+									</Grid>
 
-								<Grid size={{ xs: 6 }}>
-									<Field
-										as={TextField}
-										name="state"
-										label="State"
-										fullWidth
-										variant="outlined"
-									/>
-									<ErrorMessage
-										name="state"
-										component="div"
-										style={{ color: "red" }}
-									/>
+									<Grid size={{ xs: 6 }}>
+										<Field
+											as={TextField}
+											name="state"
+											label="State"
+											fullWidth
+											variant="outlined"
+										/>
+										<ErrorMessage
+											name="state"
+											component="div"
+											style={{ color: "red" }}
+										/>
+									</Grid>
+									<Grid size={{ xs: 6 }}>
+										<Field name="pinCode">
+											{({ field, form }) => (
+												<TextField
+													{...field}
+													label="Pin Code"
+													fullWidth
+													variant="outlined"
+													inputProps={{ maxLength: 6 }}
+													onChange={(e) => {
+														const value = e.target.value.replace(/[^0-9]/g, "");
+														form.setFieldValue("pinCode", value);
+													}}
+												/>
+											)}
+										</Field>
+										<ErrorMessage
+											name="pinCode"
+											component="div"
+											style={{ color: "red" }}
+										/>
+									</Grid>
+									<Grid size={{ xs: 12 }}>
+										<Field
+											as={TextField}
+											name="city"
+											label="City"
+											fullWidth
+											variant="outlined"
+										/>
+										<ErrorMessage
+											name="city"
+											component="div"
+											style={{ color: "red" }}
+										/>
+									</Grid>
+									<Grid size={{ xs: 12 }}>
+										<Button
+											type="submit"
+											variant="contained"
+											fullWidth
+											color="primary"
+											disabled={!(isValid && dirty)}
+										>
+											Delivere Here
+										</Button>
+									</Grid>
 								</Grid>
-								<Grid size={{ xs: 6 }}>
-									<Field name="pinCode">
-										{({ field, form }) => (
-											<TextField
-												{...field}
-												label="Pin Code"
-												fullWidth
-												variant="outlined"
-												inputProps={{ maxLength: 6 }}
-												onChange={(e) => {
-													const value = e.target.value.replace(/[^0-9]/g, "");
-													form.setFieldValue("pinCode", value);
-												}}
-											/>
-										)}
-									</Field>
-									<ErrorMessage
-										name="pinCode"
-										component="div"
-										style={{ color: "red" }}
-									/>
-								</Grid>
-								<Grid size={{ xs: 12 }}>
-									<Field
-										as={TextField}
-										name="city"
-										label="City"
-										fullWidth
-										variant="outlined"
-									/>
-									<ErrorMessage
-										name="city"
-										component="div"
-										style={{ color: "red" }}
-									/>
-								</Grid>
-								<Grid size={{ xs: 12 }}>
-									<Button
-										type="submit"
-										variant="contained"
-										fullWidth
-										color="primary"
-									>
-										Delivere Here
-									</Button>
-								</Grid>
-							</Grid>
-						</Form>
+							</Form>
+						)}
 					</Formik>
 				</Box>
 			</Modal>

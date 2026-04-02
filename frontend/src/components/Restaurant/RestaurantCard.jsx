@@ -26,8 +26,8 @@ const RestaurantCard = ({ item }) => {
 
 	return (
 		<Card
-			onClick={handleNavigateToRestaurant}
-			className="w-[18rem] cursor-pointer"
+			onClick={item.open ? handleNavigateToRestaurant : null}
+			className="w-full cursor-pointer h-full flex flex-col rounded-md shadow-md hover:shadow-lg transition-shadow duration-300"
 		>
 			<div
 				className={`${item.open ? "cursor-pointer" : "cursor-not-allowed"} relative`}
@@ -47,10 +47,17 @@ const RestaurantCard = ({ item }) => {
 			<div className="p-4 textPart lg:flex w-full justify-between">
 				<div className="space-y-1">
 					<p className="font-semibold text-lg">{item.name}</p>
-					<p className="text-gray-500 text-sm">{item.description}</p>
+					<p className="text-gray-500 text-sm line-clamp-2">
+						{item.description}
+					</p>
 				</div>
 				<div>
-					<IconButton onClick={handleAddToFavorite}>
+					<IconButton
+						onClick={(e) => {
+							e.stopPropagation();
+							handleAddToFavorite();
+						}}
+					>
 						{isPresentInFavorites(auth.favorites, item) ? (
 							<FavoriteIcon color="error" />
 						) : (

@@ -43,15 +43,21 @@ const Events = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
+		if (!isFormValid) {
+			setTouched({
+				location: true,
+				name: true,
+				startedAt: true,
+				endsAt: true,
+				image: true,
+			});
+			return;
+		}
+
 		const data = {
 			...formValues,
-			startedAt: formValues.startedAt
-				? formValues.startedAt.format("MMMM DD, YYYY hh:mm A")
-				: null,
-
-			endsAt: formValues.endsAt
-				? formValues.endsAt.format("MMMM DD, YYYY hh:mm A")
-				: null,
+			startedAt: formValues.startedAt.format("MMMM DD, YYYY hh:mm A"),
+			endsAt: formValues.endsAt.format("MMMM DD, YYYY hh:mm A"),
 		};
 
 		dispatch(
@@ -69,8 +75,6 @@ const Events = () => {
 			startedAt: null,
 			endsAt: null,
 		});
-
-		console.log("final data:", data);
 	};
 
 	useEffect(() => {
@@ -122,6 +126,20 @@ const Events = () => {
 		setFormValues({ ...formValues, [dateType]: date });
 	};
 
+	const isFormValid =
+		formValues.location.trim() !== "" &&
+		formValues.image.trim() !== "" &&
+		formValues.name.trim() !== "" &&
+		formValues.startedAt !== null &&
+		formValues.endsAt !== null &&
+		formValues.endsAt?.isAfter(formValues.startedAt);
+	const [touched, setTouched] = useState({
+		location: false,
+		name: false,
+		startedAt: false,
+		endsAt: false,
+		image: false,
+	});
 	return (
 		<div>
 			<div className="p-5">
@@ -147,6 +165,7 @@ const Events = () => {
 												id="fileInput"
 												style={{ display: "none" }}
 												onChange={handleImageUpload}
+												onBlur={() => setTouched({ ...touched, image: true })}
 											/>
 											<label className="relative" htmlFor="fileInput">
 												<span className="w-24 h-24 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-600">
@@ -158,6 +177,11 @@ const Events = () => {
 													</div>
 												)}
 											</label>
+											{touched.image && formValues.image === "" && (
+												<p className="text-red-500 text-sm">
+													Location is required
+												</p>
+											)}
 										</Fragment>
 									)}
 									{formValues.image && (
@@ -193,7 +217,11 @@ const Events = () => {
 										fullWidth
 										value={formValues.location}
 										onChange={handleFormChange}
+										onBlur={() => setTouched({ ...touched, location: true })}
 									/>
+									{touched.location && formValues.location === "" && (
+										<p className="text-red-500 text-sm">Location is required</p>
+									)}
 								</Grid>
 								<Grid size={{ xs: 12 }}>
 									<TextField
@@ -203,33 +231,40 @@ const Events = () => {
 										fullWidth
 										value={formValues.name}
 										onChange={handleFormChange}
+										onBlur={() => setTouched({ ...touched, name: true })}
 									/>
+									{touched.name && formValues.name === "" && (
+										<p className="text-red-500 text-sm">
+											Event name is required
+										</p>
+									)}
 								</Grid>
 								<Grid size={{ xs: 12 }}>
 									<LocalizationProvider dateAdapter={AdapterDayjs}>
 										<DateTimePicker
 											label="Start Date and Time"
 											value={formValues.startedAt}
-											onChange={(newValue) =>
-												handleDateChange(newValue, "startedAt")
-											}
-											format="MM/DD/YYYY hh:mm A"
-											sx={{ width: "100%" }}
+											onChange={(value) => {
+												handleDateChange(value, "startedAt");
+
+												setTouched((prev) => ({
+													...prev,
+													startedAt: true, // 🔥 IMPORTANT
+												}));
+											}}
 											slotProps={{
 												textField: {
 													fullWidth: true,
-												},
-												popper: {
-													disablePortal: true,
-													placement: "top-start",
-													modifiers: [
-														{
-															name: "preventOverflow",
-															options: {
-																boundary: "window",
-															},
-														},
-													],
+													error: touched.startedAt && !formValues.startedAt,
+													helperText:
+														touched.startedAt && !formValues.startedAt
+															? "Start date is required"
+															: "",
+													onBlur: () =>
+														setTouched((prev) => ({
+															...prev,
+															startedAt: true,
+														})),
 												},
 											}}
 										/>
@@ -240,27 +275,38 @@ const Events = () => {
 										<DateTimePicker
 											label="End Date and Time"
 											value={formValues.endsAt}
-											onChange={(newValue) =>
-												handleDateChange(newValue, "endsAt")
-											}
-											format="MM/DD/YYYY hh:mm A"
-											sx={{ width: "100%" }}
+											onChange={(value) => {
+												handleDateChange(value, "endsAt");
+
+												setTouched((prev) => ({
+													...prev,
+													endsAt: true,
+												}));
+											}}
 											minDateTime={formValues.startedAt}
 											slotProps={{
 												textField: {
 													fullWidth: true,
-												},
-												popper: {
-													placement: "top-start",
-													disablePortal: true,
-													modifiers: [
-														{
-															name: "preventOverflow",
-															options: {
-																boundary: "window",
-															},
-														},
-													],
+													error:
+														touched.endsAt &&
+														(!formValues.endsAt ||
+															!formValues.endsAt.isAfter(formValues.startedAt)),
+													helperText:
+														touched.endsAt && !formValues.endsAt
+															? "End date is required"
+															: touched.endsAt &&
+																  formValues.startedAt &&
+																  formValues.endsAt &&
+																  !formValues.endsAt.isAfter(
+																		formValues.startedAt,
+																  )
+																? "End date must be after start date"
+																: "",
+													onBlur: () =>
+														setTouched((prev) => ({
+															...prev,
+															endsAt: true,
+														})),
 												},
 											}}
 										/>
@@ -268,7 +314,11 @@ const Events = () => {
 								</Grid>
 							</Grid>
 							<div className="text-center mt-5">
-								<Button type="submit" variant="contained">
+								<Button
+									type="submit"
+									variant="contained"
+									disabled={!isFormValid}
+								>
 									Submit
 								</Button>
 							</div>

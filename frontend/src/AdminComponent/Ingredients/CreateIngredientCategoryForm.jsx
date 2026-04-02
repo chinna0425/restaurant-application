@@ -47,7 +47,12 @@ const CreateIngredientCategoryForm = () => {
 					</Grid>
 				</Grid>
 				<div className="text-center mt-5">
-					<Button variant="contained" color="primary" type="submit">
+					<Button
+						variant="contained"
+						color="primary"
+						type="submit"
+						disabled={!formData.name.trim()}
+					>
 						Create
 					</Button>
 				</div>

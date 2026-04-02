@@ -46,7 +46,7 @@ const Home = () => {
 				<h1 className="text-2xl font-semibold text-gray-400 pb-8">
 					Order From Our Handpicked Favourites
 				</h1>
-				<div className="flex flex-wrap items-center justify-around gap-5">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
 					{restaurant.restaurants?.length > 0 ? (
 						restaurant.restaurants?.map((item, index) => (
 							<RestaurantCard key={index} item={item} />
