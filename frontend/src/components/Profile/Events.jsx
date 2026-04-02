@@ -18,21 +18,23 @@ const Events = () => {
 		}
 	}, []);
 	return (
-		<div className="mt-5 px-5 flex justify-space-between flex-wrap gap-5 pb-5">
+		<div className="mt-5 px-5 pb-5">
 			{restaurant.events?.length > 0 ? (
-				restaurant.events.map((event) => (
-					<EventCard key={event.id} event={event} />
-				))
+				<div className="flex flex-wrap gap-5">
+					{restaurant.events.map((event) => (
+						<EventCard key={event.id} event={event} />
+					))}
+				</div>
 			) : (
-				<div className="home-data-notfound-container">
+				<div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
 					<img
 						src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-536.jpg?size=626&ext=jpg"
 						alt="no-data"
-						className="no-data-image"
+						className="w-72 mb-5"
 						loading="lazy"
 					/>
 
-					<p className="text-gray-400 text-lg mt-5">
+					<p className="text-gray-400 text-lg">
 						No events found. Check back later for updates!
 					</p>
 				</div>

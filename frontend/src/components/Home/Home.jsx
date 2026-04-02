@@ -46,34 +46,35 @@ const Home = () => {
 				<h1 className="text-2xl font-semibold text-gray-400 pb-8">
 					Order From Our Handpicked Favourites
 				</h1>
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-					{restaurant.restaurants?.length > 0 ? (
-						restaurant.restaurants?.map((item, index) => (
-							<RestaurantCard key={index} item={item} />
-						))
-					) : (
-						<div className="home-data-notfound-container">
-							<img
-								src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-536.jpg?size=626&ext=jpg"
-								alt="no-data"
-								className="no-data-image"
-								loading="lazy"
-							/>
 
-							<p className="sort-left-desc">
-								Please log in to view your favorite restaurants.
-							</p>
-							<Button
-								variant="contained"
-								type="button"
-								sx={{ marginTop: "20px" }}
-								onClick={() => navigate("/account/login")}
-							>
-								Login
-							</Button>
-						</div>
-					)}
-				</div>
+				{restaurant.restaurants?.length > 0 ? (
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+						{restaurant.restaurants.map((item, index) => (
+							<RestaurantCard key={index} item={item} />
+						))}
+					</div>
+				) : (
+					<div className="flex flex-col items-center justify-center h-[60vh] text-center">
+						<img
+							src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-536.jpg?size=626&ext=jpg"
+							alt="no-data"
+							className="w-72 mb-5"
+							loading="lazy"
+						/>
+
+						<p className="text-gray-400 text-lg">
+							Please log in to view your favorite restaurants.
+						</p>
+
+						<Button
+							variant="contained"
+							sx={{ marginTop: "20px" }}
+							onClick={() => navigate("/account/login")}
+						>
+							Login
+						</Button>
+					</div>
+				)}
 			</section>
 		</div>
 	);

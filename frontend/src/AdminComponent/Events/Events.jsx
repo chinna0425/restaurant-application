@@ -40,6 +40,8 @@ const Events = () => {
 	const jwt = Cookies.get("jwt");
 	const restaurant = useSelector((store) => store.restaurant);
 
+	console.log("restaunat events kiran", restaurant.restaurantsEvents);
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
@@ -75,6 +77,14 @@ const Events = () => {
 			startedAt: null,
 			endsAt: null,
 		});
+		setTouched({
+			location: false,
+			name: false,
+			startedAt: false,
+			endsAt: false,
+			image: false,
+		});
+		handleClose();
 	};
 
 	useEffect(() => {
@@ -249,7 +259,7 @@ const Events = () => {
 
 												setTouched((prev) => ({
 													...prev,
-													startedAt: true, // 🔥 IMPORTANT
+													startedAt: true,
 												}));
 											}}
 											slotProps={{
@@ -265,6 +275,22 @@ const Events = () => {
 															...prev,
 															startedAt: true,
 														})),
+												},
+												popper: {
+													placement: "top-start",
+													disablePortal: false,
+													modifiers: [
+														{
+															name: "flip",
+															enabled: true,
+														},
+														{
+															name: "preventOverflow",
+															options: {
+																boundary: "window",
+															},
+														},
+													],
 												},
 											}}
 										/>
@@ -308,6 +334,22 @@ const Events = () => {
 															endsAt: true,
 														})),
 												},
+												popper: {
+													placement: "top-start",
+													disablePortal: false,
+													modifiers: [
+														{
+															name: "flip",
+															enabled: true,
+														},
+														{
+															name: "preventOverflow",
+															options: {
+																boundary: "window",
+															},
+														},
+													],
+												},
 											}}
 										/>
 									</LocalizationProvider>
@@ -326,7 +368,7 @@ const Events = () => {
 					</Box>
 				</Modal>
 			</div>
-			{restaurant.events?.length > 0 ? (
+			{restaurant.restaurantsEvents?.length > 0 ? (
 				<div className="pb-5">
 					<h2 className="text-2xl font-semibold mb-4">Events List</h2>
 					<div className="mt-5 px-5 flex justify-space-between flex-wrap gap-5">
