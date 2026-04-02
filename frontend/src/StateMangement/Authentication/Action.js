@@ -28,12 +28,13 @@ export const registerUser = (reqData) => async (dispatch) => {
 			reqData.userData,
 		);
 
-		reqData.navigate("/account/login");
 		dispatch({ type: REGISTER_SUCCESS });
-		console.log("register success", data);
+		reqData.navigate("/account/login");
+		return true;
 	} catch (error) {
 		dispatch({ type: REGISTER_FAILURE, payload: error });
 		console.log("Error", error);
+		return false;
 	}
 };
 
@@ -63,7 +64,6 @@ export const loginUser = (reqData) => async (dispatch) => {
 			reqData.navigate("/");
 		}
 		dispatch({ type: LOGIN_SUCCESS, payload: data.token });
-		console.log("login success", data.token);
 		return true;
 	} catch (error) {
 		dispatch({ type: LOGIN_FAILURE, payload: error });

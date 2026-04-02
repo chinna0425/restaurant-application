@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
@@ -19,16 +19,19 @@ const LoginForm = () => {
 		password: "",
 	};
 	const [error, SetError] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const handleSubmit = async (values, { resetForm }) => {
 		//	console.log("Login form", values);
+		setLoading(true);
 		const isValidCredentials = await dispatch(
 			loginUser({ userData: values, navigate }),
 		);
 		resetForm();
 		SetError(!isValidCredentials);
+		setLoading(false);
 	};
 
 	return (
@@ -71,7 +74,14 @@ const LoginForm = () => {
 							sx={{ mt: 2, padding: "1rem" }}
 							disabled={!(formik.isValid && formik.dirty)}
 						>
-							Login
+							{loading ? (
+								<>
+									<CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+									Logging in...
+								</>
+							) : (
+								"Login"
+							)}
 						</Button>
 						{error && (
 							<p className="text-red-600 text-center mt-2">

@@ -98,6 +98,7 @@ export default Registration; */
 
 import {
 	Button,
+	CircularProgress,
 	FormControl,
 	InputLabel,
 	MenuItem,
@@ -110,6 +111,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../StateMangement/Authentication/Action";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 const initialValues = {
 	fullName: "",
@@ -133,11 +135,16 @@ const validationSchema = Yup.object({
 const Registration = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	const handleSubmit = (values, { resetForm }) => {
-		console.log("Register form", values);
-		dispatch(registerUser({ userData: values, navigate }));
-		resetForm();
+	const [loading, setLoading] = useState(false);
+	const handleSubmit = async (values, { resetForm }) => {
+		setLoading(true);
+		const isRegistered = await dispatch(
+			registerUser({ userData: values, navigate }),
+		);
+		if (isRegistered) {
+			resetForm();
+		}
+		setLoading(false);
 	};
 
 	return (
@@ -211,7 +218,14 @@ const Registration = () => {
 							sx={{ mt: 2, padding: "1rem" }}
 							disabled={!(formik.isValid && formik.dirty)}
 						>
-							Register
+							{loading ? (
+								<>
+									<CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+									Registering...
+								</>
+							) : (
+								"Register"
+							)}
 						</Button>
 					</form>
 				)}
