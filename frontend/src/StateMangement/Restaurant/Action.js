@@ -26,6 +26,9 @@ import {
 	GET_RESTAURANT_BY_ID_SUCCESS,
 	GET_RESTAURANT_BY_USER_ID_REQUEST,
 	GET_RESTAURANT_BY_USER_ID_SUCCESS,
+	GET_RESTAURANT_BY_USER_QUERY_FAILURE,
+	GET_RESTAURANT_BY_USER_QUERY_REQUEST,
+	GET_RESTAURANT_BY_USER_QUERY_SUCCESS,
 	GET_RESTAURANTS_CATEGORY_FAILURE,
 	GET_RESTAURANTS_CATEGORY_REQUEST,
 	GET_RESTAURANTS_CATEGORY_SUCCESS,
@@ -51,6 +54,24 @@ export const getAllRestaurantsAction = (token) => {
 		} catch (error) {
 			console.log("GetAllRestaurantsAction", error);
 			dispatch({ type: GET_ALL_RESTAURANT_FAILURE, payload: error });
+		}
+	};
+};
+
+export const getRestaurantByUserQuery = ({ query, jwt }) => {
+	return async (dispatch) => {
+		dispatch({ type: GET_RESTAURANT_BY_USER_QUERY_REQUEST });
+		try {
+			const { data } = await Api.get(`/api/restaurant/search?key=${query}`, {
+				headers: {
+					Authorization: `Bearer ${jwt}`,
+				},
+			});
+			dispatch({ type: GET_RESTAURANT_BY_USER_QUERY_SUCCESS, payload: data });
+			console.log("getRestaurantByUserQuery", data);
+		} catch (error) {
+			console.log("getRestaurantByUserQuery", error);
+			dispatch({ type: GET_RESTAURANT_BY_USER_QUERY_FAILURE, payload: error });
 		}
 	};
 };

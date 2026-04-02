@@ -21,6 +21,9 @@ import {
 	GET_RESTAURANT_BY_USER_ID_FAILURE,
 	GET_RESTAURANT_BY_USER_ID_REQUEST,
 	GET_RESTAURANT_BY_USER_ID_SUCCESS,
+	GET_RESTAURANT_BY_USER_QUERY_FAILURE,
+	GET_RESTAURANT_BY_USER_QUERY_REQUEST,
+	GET_RESTAURANT_BY_USER_QUERY_SUCCESS,
 	GET_RESTAURANTS_CATEGORY_FAILURE,
 	GET_RESTAURANTS_CATEGORY_REQUEST,
 	GET_RESTAURANTS_CATEGORY_SUCCESS,
@@ -53,6 +56,7 @@ export const restaurantReducer = (state = initialState, action) => {
 		case GET_RESTAURANT_BY_USER_ID_REQUEST:
 		case CREATE_CATEGORY_REQUEST:
 		case GET_RESTAURANTS_CATEGORY_REQUEST:
+		case GET_RESTAURANT_BY_USER_QUERY_REQUEST:
 			return {
 				...state,
 				loading: true,
@@ -65,6 +69,7 @@ export const restaurantReducer = (state = initialState, action) => {
 				usersRestaurant: action.payload,
 			};
 		case GET_ALL_RESTAURANT_SUCCESS:
+		case GET_RESTAURANT_BY_USER_QUERY_SUCCESS:
 			return {
 				...state,
 				loading: false,
@@ -145,6 +150,7 @@ export const restaurantReducer = (state = initialState, action) => {
 		case CREATE_CATEGORY_FAILURE:
 		case GET_RESTAURANTS_CATEGORY_FAILURE:
 		case GET_RESTAURANT_BY_USER_ID_FAILURE:
+		case GET_RESTAURANT_BY_USER_QUERY_FAILURE:
 			return {
 				...state,
 				loading: false,
