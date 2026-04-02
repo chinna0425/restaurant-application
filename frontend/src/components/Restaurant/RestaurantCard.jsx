@@ -8,7 +8,7 @@ import { isPresentInFavorites } from "../config/logic";
 import Cookies from "js-cookie";
 
 const RestaurantCard = ({ item }) => {
-	// console.log("Each restaurant", item);
+	console.log("Each restaurant", item);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const jwt = Cookies.get("jwt");
@@ -46,7 +46,8 @@ const RestaurantCard = ({ item }) => {
 			</div>
 			<div className="p-4 textPart lg:flex w-full justify-between">
 				<div className="space-y-1">
-					<p className="font-semibold text-lg">{item.name}</p>
+					{item.name && <p className="font-semibold text-lg">{item.name}</p>}
+					{item.title && <p className="font-semibold text-lg">{item.title}</p>}
 					<p className="text-gray-500 text-sm line-clamp-2">
 						{item.description}
 					</p>

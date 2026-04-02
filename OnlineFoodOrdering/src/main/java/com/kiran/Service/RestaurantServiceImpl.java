@@ -119,9 +119,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         RestaurantDto dto=new RestaurantDto();
         dto.setDescription(restaurant.getDescription());
         dto.setImages(restaurant.getImages());
-        dto.setTitle(restaurant.getName());
+        dto.setName(restaurant.getName());
         dto.setId(restaurant.getId());
-
+        dto.setOpen(restaurant.isOpen());
         if(user.getFavourites().contains(dto)){
             user.getFavourites().remove(dto);
         }else{

@@ -15,12 +15,14 @@ import java.util.List;
 @Embeddable
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class RestaurantDto {
-    private String title;
+    private String name;
 
     @Column(length = 1000)
     private List<String> images;
 
     private String description;
+
+    private Boolean open;
 
     @EqualsAndHashCode.Include
     private Long id;
