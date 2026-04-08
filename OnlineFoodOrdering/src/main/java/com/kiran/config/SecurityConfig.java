@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
 
                 .authorizeHttpRequests(auth->
-                        auth.requestMatchers("/ping").permitAll().requestMatchers("/auth/**").permitAll()
+                        auth.requestMatchers("/","/ping").permitAll().requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex-> ex.authenticationEntryPoint(entryPoint)
